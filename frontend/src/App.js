@@ -9,7 +9,6 @@ import Register from './components/register/Register.jsx';
 function App() {
   return (
     <>
-<<<<<<< HEAD
         <Routes>
           
   
@@ -18,12 +17,6 @@ function App() {
           {/* <Route path='/register' element={<SignUp />} /> */}
 
         </Routes>
-=======
-      <Login
-      name = "James"
-      />
-    
->>>>>>> 265de80ff7adce00116b3ef97edf9a74171db4d4
     </>
   );
 }
