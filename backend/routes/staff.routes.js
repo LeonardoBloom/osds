@@ -3,17 +3,32 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db');
 const rsa = require('../rsa')
+const des = require('../des')
 
 // GET all students
 router.get('/students', (req, res) => {
 
-    const sql = 'select stu_id, fname, lname, dept from student';
+    const sql = 'select * from student';
 
-    db.query(sql, (err, res) => {
+    db.query(sql, async (err, results) => {
         if (err) {
             return res.status(500).json({ error: err.message});
         }
-        res.json(result);
+        const data = results
+        // console.log("encrypted data: ", data)
+        for (let i = 0; i < data.length; i++) {
+            data[i].fname = await des.decrypt(data[i].fname)
+            data[i].lname = await des.decrypt(data[i].lname)
+            data[i].email = await des.decrypt(data[i].email)
+            data[i].pwd = await des.decrypt(data[i].pwd)
+            data[i].dept = await des.decrypt(data[i].dept)
+            data[i].gpa = await des.decrypt(data[i].gpa)
+            data[i].cgpa = await des.decrypt(data[i].cgpa)
+            if (data[i].transcript_info) {
+                data[i].transcript_info = await des.decrypt(data[i].transcript_info)
+            }
+        }
+        res.json(data);
     });
     console.log("made GET All students request")
 });
@@ -27,17 +42,56 @@ router.get('/students/:stu_id', (req, res) => {
     where stu_id = ?
     `
 
-    db.query(sql, [stu_id], (err, results) => {
+    db.query(sql, [stu_id], async (err, results) => {
         if(err) {
             return res.status(500).json({ error: err.message });
         }
-        res.json(results);
+        const data = results
+        console.log("encrypted data: ", data)
+        data[0].fname = await des.decrypt(data[0].fname)
+        data[0].lname = await des.decrypt(data[0].lname)
+        data[0].email = await des.decrypt(data[0].email)
+        data[0].pwd = await des.decrypt(data[0].pwd)
+        data[0].dept = await des.decrypt(data[0].dept)
+        data[0].gpa = await des.decrypt(data[0].gpa)
+        data[0].cgpa = await des.decrypt(data[0].cgpa)
+        // data[0].transcript_info = await des.decrypt(data[0].transcript_info)
+        res.json(data);
     });
     console.log(`made GET student with id: ${stu_id}`);
 })
 
+router.put('/students/:stu_id', async (req, res) => {
+
+    const { stu_id } = req.params;
+    const {gpa, cgpa} = req.body;
+    console.log(req.params)
+
+
+    const enc_gpa = await des.encrypt(gpa)
+    const enc_cgpa = await des.encrypt(cgpa)
+    // const enc_lname = await des.encrypt(lname)
+
+    const sql = `
+    UPDATE student set gpa = ?, cgpa = ?
+    where stu_id = ?
+    `
+
+    console.log(enc_gpa)
+
+    db.query(sql, [enc_gpa, enc_cgpa, stu_id], async (err, results) => {
+        if(err) {
+            return res.status(500).json({ error: err.message });
+        }
+        const data = results
+        res.json(data);
+    });
+    console.log(`made UPDATE student GPA/CGPA with id: ${stu_id}`);
+});
+
 // GET ALL REQUESTS
-router.get('/students/requests', (req, res) => {
+router.get('/requests', (req, res) => {
+    console.log("getting requests...")
 
     sql = `SELECT * from requests`
 
@@ -51,21 +105,21 @@ router.get('/students/requests', (req, res) => {
 });
 
 // GET specific request
-router.get('/students/requests/:req_id', (req, res) => {
-    const { req_id } = req.params;
+router.get('/requests/:stu_id', (req, res) => {
+    const { stu_id } = req.params;
 
     sql = `
     SELECT * from requests
-    WHERE req_id = ?
+    WHERE stu_id = ?
     `
 
-    db.query(sql, req_id, (err, results) => {
+    db.query(sql, stu_id, (err, results) => {
         if(err) {
             return res.status(500).json({error: err.message});
         }
         res.json(results);
     })
-    console.log(`Fetched request #${req_id}`);
+    console.log(`Fetched request for student #${stu_id}`);
 })
 
 router.post('/students/requests/upload/:req_id', (req, res) => {
@@ -106,7 +160,7 @@ router.put('/students/requests/status/:req_id', (req, res) => {
 })
 
 // UPDATE GPA / CGPA
-router.put('/students/grades/:stu_id', (req, res) => {
+router.put('/students/grades/:stu_id', async (req, res) => {
     const { stu_id } = req.params;
     const { gpa, cgpa } = req.body;
 
@@ -115,11 +169,11 @@ router.put('/students/grades/:stu_id', (req, res) => {
 
     if (gpa !=  undefined) {
         grade.push('gpa = ?');
-        values.push(gpa);
+        values.push(await des.encrypt(gpa));
     }
     if (cgpa !=  undefined) {
         grade.push('cgpa = ?');
-        values.push(cgpa);
+        values.push(await des.encrypt(cgpa));
     }
 
     values.push(stu_id)

@@ -1,7 +1,7 @@
 
 const NodeRSA = require('node-rsa');
 
-async function genSign(mode, data, signature = "") {
+async function genSign(mode, data, signature = "", pubkey = null) {
     // Sign the data
 
     try {
@@ -19,15 +19,33 @@ async function genSign(mode, data, signature = "") {
         }    
 
         if (mode == "s") {
+
+            
+            // parse private key to sign
             const keyForSigning = new NodeRSA(result[0].key_priv);
+
+            // sign data using private key
             const signature = keyForSigning.sign(data, 'base64');
+
+            //output signature
             console.log("Signature:", signature);
             
             return signature
 
         } else if (mode == "v") {
             // Verify the signature
-            const keyForVerification = new NodeRSA(result[0].key_pub);
+            let public_k = ""
+            if (pubkey) {
+                public_k = pubkey
+            } else {
+                public_k = result[0].key_pub
+            }
+            
+
+            // parse public key for signing
+            const keyForVerification = new NodeRSA(public_k);
+
+            // verify data with signature and OUTPUT: true OR false
             const isValid = keyForVerification.verify(data, signature, 'utf8', 'base64');
             console.log("Is signature valid?", isValid);
 

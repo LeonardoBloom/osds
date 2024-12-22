@@ -1,33 +1,27 @@
 const NodeRSA = require('node-rsa')
-const key = new NodeRSA({ b: 512 }); // 512-bit key
 
 module.exports = {
     generateKeys: function () {
         let keys = []
-    
+        
+        const key = new NodeRSA({ b: 512 }); // 512-bit key
         const publicKey = key.exportKey('public');
-        console.log(publicKey)
+        console.log("generated public key...")
         keys.push(publicKey)
 
         // let pubkey = publicKey.slice(27, 156)
 
         const privateKey = key.exportKey('private');
-        console.log(privateKey)
+        console.log("generated private key...")
         keys.push(privateKey)
 
         console.log(keys)
-        // let privkey = privateKey.split('\n').join('')
-        // console.log("\n",privkey, "\n")
-        // privkey = privkey.replace('/\n/g','')
-        // console.log("\n",privkey, "\n")
-        // privkey = privateKey.slice(32, 463)
-        // console.log("\n",privkey, "\n")
 
         return keys
     },
 
-    generateSignature: async function (mode, data, signature = "") {
-        // Sign the data
+    generateSignature: async function (mode, data, signature = "", pubkey = null) {
+        // Sign the data (as string)
 
         try {
             const response = await fetch('http://localhost:5000/api/keys/rsa/getkeys',
@@ -44,6 +38,8 @@ module.exports = {
             }    
     
             if (mode == "s") {
+
+                console.log("signing...")
                 const keyForSigning = new NodeRSA(result[0].key_priv);
                 const signature = keyForSigning.sign(data, 'base64');
                 console.log("Signature:", signature);
@@ -52,7 +48,16 @@ module.exports = {
     
             } else if (mode == "v") {
                 // Verify the signature
-                const keyForVerification = new NodeRSA(result[0].key_pub);
+
+                let public_k = ""
+                if (pubkey) {
+                    public_k = pubkey
+                } else {
+                    public_k = result[0].key_pub
+                }
+
+                console.log("verifying signature...")
+                const keyForVerification = new NodeRSA(public_k);
                 const isValid = keyForVerification.verify(data, signature, 'utf8', 'base64');
                 console.log("Is signature valid?", isValid);
     

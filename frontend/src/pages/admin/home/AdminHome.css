@@ -1,0 +1,40 @@
+
+body {
+    color: white;
+}
+.admin-head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 50px;
+    gap: 40px;
+}
+
+.admin-pfp {
+    height: 50px;
+    width: 50px;
+    font-size: 70px;
+}
+
+.admin-head h1 {
+    font-size: 40px;
+}
+
+.user-lists {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    height: 80%;
+    opacity: 100;
+    transition: opacity 1s ease-out;
+}
+
+.student-list {
+    width: 400px;
+}
+
+.hide {
+    opacity: 0;
+}

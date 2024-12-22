@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { AuthProvider } from './context/AuthProvider';
 
 import { BrowserRouter } from 'react-router-dom'
 
@@ -11,9 +12,17 @@ import { BrowserRouter } from 'react-router-dom'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    {/* <AuthProvider
+      authType={"cookie"}
+      authName={"_auth"}
+      cookeDomain={window.location.hostname}
+      cookieSecure={false}
+    /> */}
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </React.StrictMode>
 );
 

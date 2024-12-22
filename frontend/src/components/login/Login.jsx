@@ -1,58 +1,144 @@
-import React from 'react'
+import React, { useState, useRef, useEffect, useContext} from 'react'
+import AuthContext from '../../context/AuthProvider';
+import axios from '../../api/axios';
+
 import './Login.css';
 import Des_scr from '../../scripts/des';
+import { MdOutlineEnhancedEncryption } from "react-icons/md";
+import { useSignIn } from 'react-auth-kit'
 
-const Login = ({name}) => {
+const LOGIN_URL = '/auth/login'
+const Login = () => {
 
-  function handleLogin() {
-    
-  }
+  const {setAuth} = useContext(AuthContext);
+  const [FormData, setFormData] = useState({
+    des_key: "",
+    email: "",
+    pwd: "",
+  });
 
-  console.log("hello")
+  // const signIn = useSignIn();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...FormData,
+      [name]: value,
+    });
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!FormData.des_key || !FormData.email || !FormData.pwd) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    try {
+
+      const response = await axios.post(LOGIN_URL, JSON.stringify(FormData),
+        {
+          headers: {'Content-Type': 'application/json'},
+          
+        }
+      );
+      console.log(JSON.stringify(response?.data));
+      // console.log(JSON.stringify(response));
+
+      const accessToken = response?.data?.accessToken;
+      const roles = response?.data?.roles;
+
+      // setAuth ({des_key, user, pwd, roles, accessToken});
+      // const response = await fetch("http://localhost:5000/api/auth/login", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(FormData),
+      // });
+
+      // if (!response.ok) {
+      //   const data = await response.json();
+      //   console.log("Response Data:", data);
+
+      //   // signIn({
+      //   //   token: data.token,
+      //   //   expiresIn: 3600,
+      //   //   tokenType: "Bearer",
+      //   //   authState: { des_key: FormData.des_key, email: FormData.email },
+      //   // });
+
+      //   alert("Login successful!");
+        
+      // } else {
+      //   const errorText = await response.text();
+      //   alert(`Login failed: ${errorText}`);
+      // }
+
+      // alert("Login successful!");
+    } catch (err) {
+      // if (!err?.response) {
+      //   setErrMsg('No Server Response');
+      // } else if (err.response?.status === 400) {
+      //   setErrMsg('Missing Username, Passoword, or DES KEY')
+      // } else if (err.response?.status === 401) {
+      //   setErrMsg('Unauthorized')
+      // } else {
+      //   setErrMsg('Login Failed')
+      // }
+      // errRef.current.focus()
+    }
+  };
 
   return (
-    <>
-<div className='login-container'>
+    <div className="login-container">
+      
+      <form onSubmit={handleLogin} className="login-form">
+        <h1 
+          style ={{textAlign: "center", 
+                  fontSize: "30px"}}>
+            OSDS LOGIN</h1>
+        <label className="input input-bordered flex items-center gap-2">
+          <MdOutlineEnhancedEncryption />
+          <input
+            type="text"
+            className="grow"
+            placeholder="DES Key"
+            name="des_key"
+            value={FormData.des_key}
+            onChange={handleChange}
+          />
+        </label>
 
-  <div className='login-form'>
-    
-    <label className="input input-bordered flex items-center gap-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 16 16"
-        fill="currentColor"
-        className="h-4 w-4 opacity-70">
-        <path
-          d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
-        <path
-          d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
-      </svg>
-      <input type="text" className="grow" placeholder="Email" />
-    </label>
-    
-    <label className="input input-bordered flex items-center gap-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 16 16"
-        fill="currentColor"
-        className="h-4 w-4 opacity-70">
-        <path
-          fillRule="evenodd"
-          d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
-          clipRule="evenodd" />
-      </svg>
-      <input type="password" className="grow" placeholder='Password' />
-    </label>
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="text"
+            className="grow"
+            placeholder="Email"
+            name="email"
+            value={FormData.email}
+            onChange={handleChange}
+          />
+        </label>
 
-    <button className="btn btn-wide" style={{width:"100%"}} onClick={handleLogin}>Login</button>
-  </div>
+        <label className="input input-bordered flex items-center gap-2">
+          <input
+            type="password"
+            className="grow"
+            placeholder="Password"
+            name="pwd"
+            value={FormData.pwd}
+            onChange={handleChange}
+          />
+        </label>
 
-</div>
+        <button type="submit" className="btn btn-wide" style={{ width: "100%" }}>
+          Login
+        </button>
+      </form>
+    </div>
+  );
+};
 
-<Des_scr />
-    
-    </>
-  )
-}
-
-export default Login
+export default Login;

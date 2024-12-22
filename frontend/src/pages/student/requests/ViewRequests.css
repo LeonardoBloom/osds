@@ -1,0 +1,47 @@
+
+body {
+    
+}
+
+.request-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.request-details {
+    font-size: 14px;
+    color: #fff;
+}
+
+.request-status {
+    margin-top: 10px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+span {
+    font-weight: bold;
+}
+
+span[style="color: green;"] {
+    color: green;
+}
+
+span[style="color: red;"] {
+    color: red;
+}
+
+.error {
+    color: red;
+}
