@@ -3,12 +3,14 @@ import './StudentHome.css';
 import { FaUserShield } from 'react-icons/fa';
 import StudentRequests from '../requests/StudentRequests';
 import ViewRequests from '../requests/ViewRequests';
+import { useNavigate } from 'react-router-dom';
 // import StudentList from '../../../components/Lists/student/StudentList';
 // import StaffList from '../../../components/Lists/staff/StaffList';
 // import StaffForm from '../addStaff/AddStaff';
 // import StudentForm from '../addStudent/AddStudent';
 
 const StudentHome = () => {
+    const navigate = useNavigate()
 
     const [isVisible, setIsVisible] = useState(true)
     const [makeRequest, setMakeRequest] = useState(false)
@@ -101,7 +103,13 @@ const StudentHome = () => {
             <li onClick={goToRequests}><a>Request Document</a></li>
             <li onClick={goToView}><a>View Requests</a></li>
             {/* <li onClick={goToSend}><a>Send Invoice</a></li> */}
+            <br></br>
+            <br></br>
+            <br></br>
+            <li onClick={() => navigate('/')}><a>LOG OUT</a></li>
             </ul>
+
+            
         </div>
     </div>
 

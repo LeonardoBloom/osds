@@ -5,9 +5,10 @@ import StudentList from '../../../components/Lists/student/StudentList';
 import StaffList from '../../../components/Lists/staff/StaffList';
 import StaffForm from '../addStaff/AddStaff';
 import StudentForm from '../addStudent/AddStudent';
+import { useNavigate } from 'react-router-dom';
 
 const AdminHome = () => {
-
+    const navigate = useNavigate()
     const [isVisible, setIsVisible] = useState(true)
     const [addStaff, setAddStaff] = useState(false)
     const [addStudent, setAddStudent] = useState(false)
@@ -85,6 +86,10 @@ const AdminHome = () => {
             <li onClick={goToHome}><a>Home Page</a></li>
             <li onClick={goToAddStaff}><a>ADD Staff</a></li>
             <li onClick={goToAddStudent}><a>ADD Student</a></li>
+            <br></br>
+            <br></br>
+            <br></br>
+            <li onClick={() => navigate('/')}><a>LOG OUT</a></li>
             </ul>
         </div>
     </div>

@@ -53,12 +53,15 @@ router.get('/staff/:sf_id', (req, res) => {
         }
         const data = results
         console.log("encrypted data: ", data)
-        data[0].fname = await des.decrypt(data[0].fname)
-        data[0].lname = await des.decrypt(data[0].lname)
-        data[0].email = await des.decrypt(data[0].email)
-        data[0].dept = await des.decrypt(data[0].dept)
+        if (data[0]) {
 
-        res.json(data);
+            data[0].fname = await des.decrypt(data[0].fname)
+            data[0].lname = await des.decrypt(data[0].lname)
+            data[0].email = await des.decrypt(data[0].email)
+            data[0].dept = await des.decrypt(data[0].dept)
+    
+            res.json(data);
+        }
     });
     console.log(`made GET staff with id: ${sf_id}`);
 })

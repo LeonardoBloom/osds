@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext} from 'react'
 import AuthContext from '../../context/AuthProvider';
 import axios from '../../api/axios';
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { Form, useNavigate } from "react-router-dom"; // Import useNavigate
 
 import './Login.css';
 import Des_scr from '../../scripts/des';
@@ -64,17 +64,17 @@ const Login = () => {
       console.log("Response data:", JSON.stringify(response?.data));
       // alert("Login successful!");
       if (FormData.role == "sysadmin") {
-        navigate("/admin")
+        navigate("/admin", {state: {id: FormData.email}})
       } else if (FormData.role == "staff") {
-        navigate("/staff")
+        navigate("/staff", {state: {sf_id: FormData.email} })
       } else if (FormData.role == "student") {
-        navigate("/student")
+        navigate("/student", {state: {stu_id: FormData.email}})
       }
 
 
     } catch (err) {
-      console.error("Login failed:", err);
-      // alert("Login failed. Please try again.");
+      // console.error("Login failed:", err);
+      alert("Login failed.");
     }
   };
 

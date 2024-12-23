@@ -10,6 +10,8 @@ const EditInfo = ({id}) => {
   
   const [isEditing, setIsEditing] = useState(false);
 
+  
+
   // Fetch the data from the API when the component mounts
   useEffect(() => {
     // Replace with your actual API endpoint

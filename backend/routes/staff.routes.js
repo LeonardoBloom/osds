@@ -48,15 +48,18 @@ router.get('/students/:stu_id', (req, res) => {
         }
         const data = results
         console.log("encrypted data: ", data)
-        data[0].fname = await des.decrypt(data[0].fname)
-        data[0].lname = await des.decrypt(data[0].lname)
-        data[0].email = await des.decrypt(data[0].email)
-        data[0].pwd = await des.decrypt(data[0].pwd)
-        data[0].dept = await des.decrypt(data[0].dept)
-        data[0].gpa = await des.decrypt(data[0].gpa)
-        data[0].cgpa = await des.decrypt(data[0].cgpa)
-        // data[0].transcript_info = await des.decrypt(data[0].transcript_info)
-        res.json(data);
+        if(data[0]) {
+            data[0].fname = await des.decrypt(data[0].fname)
+            data[0].lname = await des.decrypt(data[0].lname)
+            data[0].email = await des.decrypt(data[0].email)
+            data[0].pwd = await des.decrypt(data[0].pwd)
+            data[0].dept = await des.decrypt(data[0].dept)
+            data[0].gpa = await des.decrypt(data[0].gpa)
+            data[0].cgpa = await des.decrypt(data[0].cgpa)
+            // data[0].transcript_info = await des.decrypt(data[0].transcript_info)
+            res.json(data);
+        }
+            res.status(500)
     });
     console.log(`made GET student with id: ${stu_id}`);
 })

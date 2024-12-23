@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const EditGrades = () => {
+const EditGrades = ({id}) => {
   const [userData, setUserData] = useState({
     email: '',
     fname: '',
@@ -15,7 +15,7 @@ const EditGrades = () => {
   // Fetch the data from the API when the component mounts
   useEffect(() => {
       // Replace with your actual API endpoint
-    let id = 123
+  
     fetch(`http://localhost:5000/api/staff/students/${id}`) 
       .then(response => response.json())
       .then(data => {

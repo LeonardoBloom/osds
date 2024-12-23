@@ -41,8 +41,8 @@ const StaffList = () => {
     <div className='student-div'>
   <h1>Staff List:</h1>
   {data.map((student) => (
-    <Link>
-        <div className='student-one' key={student.stu_id}>
+    
+        <div style={{cursor: "pointer"}} className='student-one' key={student.stu_id}>
             <div className='student-icon'>
                 <FaUserTie />
             </div>
@@ -53,7 +53,6 @@ const StaffList = () => {
             </div>
             
         </div>
-    </Link>
   ))}
 </div>
 

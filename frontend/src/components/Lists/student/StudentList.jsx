@@ -5,7 +5,7 @@ import ReactLoading from 'react-loading'
 import { Router, Link } from 'react-router-dom';
 import './StudentList.css'
 
-const StudentList = () => {
+const StudentList = ( {onStudentSelect }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -37,8 +37,8 @@ const StudentList = () => {
     if (error) return <p><MdError />Error Loading Students</p>
 
     function clickedId(id) {
-        console.log(id)
-        setId(id)
+        // console.log(id)
+        onStudentSelect(id)
     }
 
   return (
@@ -46,22 +46,19 @@ const StudentList = () => {
     <div className='student-div'>
   <h1>Student List:</h1>
   {data.map((student) => (
-    <Link>
-        <div className='student-one' key={student.stu_id} onClick={() => clickedId(student.stu_id)}>
-            <div className='student-icon'>
-                <FaUserGraduate />
-            </div>
-            <div key={student.stu_id} className='student-item'>
-                <p><strong>ID:</strong> {student.stu_id}</p>
-                <p><strong>Name:</strong> {student.fname} {student.lname}</p>
-                <p><strong>Department:</strong> {student.dept}</p>
-                <p><strong>CGPA:</strong> {student.cgpa} </p>
-            </div>
-            
+    <div  style={{cursor: "pointer"}} className='student-one' key={student.stu_id} onClick={() => clickedId(student.stu_id)}>
+        <div className='student-icon'>
+            <FaUserGraduate />
         </div>
-    </Link>
-    
-  ))}
+        <div className='student-item'>
+            <p><strong>ID:</strong> {student.stu_id}</p>
+            <p><strong>Name:</strong> {student.fname} {student.lname}</p>
+            <p><strong>Department:</strong> {student.dept}</p>
+            <p><strong>CGPA:</strong> {student.cgpa}</p>
+        </div>
+    </div>
+))}
+
 </div>
 
     </>

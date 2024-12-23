@@ -6,16 +6,23 @@ import StaffList from '../../../components/Lists/staff/StaffList';
 import EditInfo from '../editInfo/EditInfo';
 import Requests from '../requests/Requests';
 import EditGrades from '../editGrades/EditGrades';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import StaffForm from '../addStaff/AddStaff';
 // import StudentForm from '../addStudent/AddStudent';
 
 const StaffHome = () => {
-
+    const navigate = useNavigate()
     const [isVisible, setIsVisible] = useState(true)
     const [addStaff, setAddStaff] = useState(false)
     const [addStudent, setAddStudent] = useState(false)
     const [requests, setRequests] = useState(false)
     const [requestData, setRequestData] = useState(false)
+    const location = useLocation();
+    const [stu_id, setStu_id] = useState(null)
+
+    const sf_id = location.state?.sf_id
+
+    console.log("logged as", sf_id)
 
     useEffect (() => {
         getRequests()
@@ -84,6 +91,12 @@ const StaffHome = () => {
         }
     }
 
+    function handleStudentSelect(stu_id) {
+        setStu_id(stu_id)
+        console.log("selected student:", stu_id)
+        goToEditStudent()
+    }
+
     
     
 
@@ -99,7 +112,7 @@ const StaffHome = () => {
             <div className={`user-lists`}
                     style= {{display: isVisible ? '' : 'none'}}>
                 <div className='student-list'>
-                    <StudentList />
+                    <StudentList onStudentSelect={handleStudentSelect} />
                 </div>
                 <div className='staff-list'>
                     <StaffList />
@@ -107,10 +120,10 @@ const StaffHome = () => {
             </div>
 
             {/* edit STAFF */}
-            {addStaff ? <EditInfo id={123130} /> : <></>}
+            {addStaff ? <EditInfo id={sf_id} /> : <></>}
 
             {/* edit STUDENT */}
-            {addStudent ? <EditGrades /> : <></>}
+            {addStudent ? <EditGrades id={stu_id}/> : <></>}
 
             {/* Requests */}
             {requests ? <Requests requests={requestData} /> : <></>}
@@ -133,7 +146,10 @@ const StaffHome = () => {
             <li onClick={goToEditStaff}><a>Edit Information</a></li>
             <li onClick={goToEditStudent}><a>Edit Student GPA/CGPA</a></li>
             <li onClick={goToRequests}><a>Document Requests</a></li>
-            
+            <br></br>
+            <br></br>
+            <br></br>
+            <li onClick={() => navigate('/')}><a>LOG OUT</a></li>
             </ul>
         </div>
     </div>

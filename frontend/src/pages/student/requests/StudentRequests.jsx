@@ -16,6 +16,8 @@ const StudentRequests = ({ stu_id }) => {
         try {
             setLoading(true);
 
+            let req_type = requestType
+
             const response = await fetch('http://localhost:5000/api/student/request', {
                 method: 'POST',
                 headers: {
@@ -23,7 +25,7 @@ const StudentRequests = ({ stu_id }) => {
                 },
                 body: JSON.stringify({
                     stu_id,
-                    requestType,
+                    req_type,
                 }),
             });
 
