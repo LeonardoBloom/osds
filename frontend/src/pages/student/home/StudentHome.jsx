@@ -95,12 +95,12 @@ const StudentHome = () => {
                 <div className='admin-pfp'>
                     <FaUserShield /> 
                 </div>
-                <h1>NAME</h1>
+                <h1>Student</h1>
             </div>
             <li onClick={goToHome}><a>Home</a></li>
             <li onClick={goToRequests}><a>Request Document</a></li>
             <li onClick={goToView}><a>View Requests</a></li>
-            <li onClick={goToSend}><a>Send Invoice</a></li>
+            {/* <li onClick={goToSend}><a>Send Invoice</a></li> */}
             </ul>
         </div>
     </div>

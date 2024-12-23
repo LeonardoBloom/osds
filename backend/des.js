@@ -21,7 +21,7 @@ function generate_des_key () {
 
     const Newkey = CryptoJS.lib.WordArray.random(8);
 
-    return key
+    return Newkey
 
 }
 
@@ -29,15 +29,12 @@ const get_des_key = async () => {
     return await des_handler.getDES_key()
 }
 
-
 async function encrypt(data) {
 
     console.log("ENcrypting DATA...", data)
 
         const key = await get_des_key()
 
-        
-    
         // Encrypt the file data (data is a buffer)
         const encrypted = CryptoJS.DES.encrypt(data.toString('utf8'), key.key, options).toString();
         console.log("Message: ", data.toString('utf8'))

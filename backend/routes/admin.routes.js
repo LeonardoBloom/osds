@@ -96,7 +96,6 @@ router.post('/students/add', async (req, res) => {
     try {
 
         const { id, fname, lname, email, pwd, dept } = req.body;
-        
 
         const enc_fname = await des.encrypt(fname)
         console.log("enc fname: ", enc_fname)
@@ -107,7 +106,6 @@ router.post('/students/add', async (req, res) => {
         const enc_gpa = await des.encrypt('0')
         const enc_cgpa = await des.encrypt('0')
     
-        
     
         const sql = 'INSERT INTO student (stu_id, fname, lname, email, pwd, dept, gpa, cgpa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     

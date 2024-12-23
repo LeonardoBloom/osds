@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useContext} from 'react'
 import AuthContext from '../../context/AuthProvider';
 import axios from '../../api/axios';
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 import './Login.css';
 import Des_scr from '../../scripts/des';
@@ -9,96 +10,117 @@ import { useSignIn } from 'react-auth-kit'
 
 const LOGIN_URL = '/auth/login'
 const Login = () => {
-
-  const {setAuth} = useContext(AuthContext);
+  const navigate = useNavigate(); // Initialize useNavigate
+  const { setAuth } = useContext(AuthContext);
+  const [selectedRole, setSelectedRole] = useState("");
   const [FormData, setFormData] = useState({
     des_key: "",
     email: "",
     pwd: "",
+    role: "",
   });
-
-  // const signIn = useSignIn();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...FormData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
+  };
+
+  // Function to handle radio button selection
+  const handleRoleChange = (event) => {
+    const role = event.target.value;
+    setSelectedRole(role);
+    setFormData((prevData) => ({
+      ...prevData,
+      role: role,
+    }));
+    performAction(role);
+  };
+
+  // Perform some action based on the selected role
+  const performAction = (role) => {
+    console.log(`Selected role is: ${role}`);
+    // Add additional actions if needed
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!FormData.des_key || !FormData.email || !FormData.pwd) {
-      alert("Please fill in all fields.");
+    if (!FormData.des_key || !FormData.email || !FormData.pwd || !FormData.role) {
+      alert("Please fill in all fields, including the role.");
       return;
     }
 
     try {
-
-      const response = await axios.post(LOGIN_URL, JSON.stringify(FormData),
+      const response = await axios.post(
+        LOGIN_URL,
+        JSON.stringify(FormData),
         {
-          headers: {'Content-Type': 'application/json'},
-          
+          headers: { "Content-Type": "application/json" },
         }
       );
-      console.log(JSON.stringify(response?.data));
-      // console.log(JSON.stringify(response));
-
-      const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
-
-      // setAuth ({des_key, user, pwd, roles, accessToken});
-      // const response = await fetch("http://localhost:5000/api/auth/login", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(FormData),
-      // });
-
-      // if (!response.ok) {
-      //   const data = await response.json();
-      //   console.log("Response Data:", data);
-
-      //   // signIn({
-      //   //   token: data.token,
-      //   //   expiresIn: 3600,
-      //   //   tokenType: "Bearer",
-      //   //   authState: { des_key: FormData.des_key, email: FormData.email },
-      //   // });
-
-      //   alert("Login successful!");
-        
-      // } else {
-      //   const errorText = await response.text();
-      //   alert(`Login failed: ${errorText}`);
-      // }
-
+      console.log("Response data:", JSON.stringify(response?.data));
       // alert("Login successful!");
+      if (FormData.role == "sysadmin") {
+        navigate("/admin")
+      } else if (FormData.role == "staff") {
+        navigate("/staff")
+      } else if (FormData.role == "student") {
+        navigate("/student")
+      }
+
+
     } catch (err) {
-      // if (!err?.response) {
-      //   setErrMsg('No Server Response');
-      // } else if (err.response?.status === 400) {
-      //   setErrMsg('Missing Username, Passoword, or DES KEY')
-      // } else if (err.response?.status === 401) {
-      //   setErrMsg('Unauthorized')
-      // } else {
-      //   setErrMsg('Login Failed')
-      // }
-      // errRef.current.focus()
+      console.error("Login failed:", err);
+      // alert("Login failed. Please try again.");
     }
   };
 
   return (
     <div className="login-container">
-      
       <form onSubmit={handleLogin} className="login-form">
-        <h1 
-          style ={{textAlign: "center", 
-                  fontSize: "30px"}}>
-            OSDS LOGIN</h1>
+        <h1 style={{ textAlign: "center", fontSize: "30px" }}>OSDS LOGIN</h1>
+        <div>
+          <p>Login as:</p>
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="sysadmin"
+              checked={selectedRole === "sysadmin"}
+              onChange={handleRoleChange}
+            />
+            Admin
+          </label>
+          <br />
+
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="student"
+              checked={selectedRole === "student"}
+              onChange={handleRoleChange}
+            />
+            Student
+          </label>
+          <br />
+
+          <label>
+            <input
+              type="radio"
+              name="role"
+              value="staff"
+              checked={selectedRole === "staff"}
+              onChange={handleRoleChange}
+            />
+            Staff
+          </label>
+        </div>
+        <br />
+
         <label className="input input-bordered flex items-center gap-2">
           <MdOutlineEnhancedEncryption />
           <input
