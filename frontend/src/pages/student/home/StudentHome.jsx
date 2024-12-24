@@ -3,7 +3,8 @@ import './StudentHome.css';
 import { FaUserShield } from 'react-icons/fa';
 import StudentRequests from '../requests/StudentRequests';
 import ViewRequests from '../requests/ViewRequests';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // import StudentList from '../../../components/Lists/student/StudentList';
 // import StaffList from '../../../components/Lists/staff/StaffList';
 // import StaffForm from '../addStaff/AddStaff';
@@ -16,6 +17,8 @@ const StudentHome = () => {
     const [makeRequest, setMakeRequest] = useState(false)
     const [view, setView] = useState(false)
     const [send, setSend] = useState(false)
+
+    const stu_id = location.state?.stu_id
     
 
     function goToHome() {
@@ -77,10 +80,10 @@ const StudentHome = () => {
             {isVisible ? <>Home</> : (<></>)}
             
             {/* ADD STAFF */}
-            {makeRequest ? <StudentRequests stu_id={2} /> : (<></>)}
+            {makeRequest ? <StudentRequests stu_id={stu_id} /> : (<></>)}
 
             {/* ADD STUDENT */}
-            {view ? <ViewRequests stu_id={2}/> : (<></>)}
+            {view ? <ViewRequests stu_id={stu_id}/> : (<></>)}
 
             {send ? <>send invoice</> : (<></>)}
            
