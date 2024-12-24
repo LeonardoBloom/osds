@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import globalURL from '../../../globalURL';
 
 
 function StudentForm() {
@@ -40,7 +41,7 @@ function StudentForm() {
 
     // Log form data (this could be an API call)
     console.log('Form Data Submitted:', JSON.stringify(formData));
-    fetch(`http://localhost:5000/api/admin/students/add`, {
+    fetch(`http://${globalURL()}:5000/api/admin/students/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

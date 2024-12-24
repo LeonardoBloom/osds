@@ -5,6 +5,7 @@ import { MdError } from 'react-icons/md';
 import { FaUserGraduate } from "react-icons/fa";
 import ReactLoading from 'react-loading'
 import { Router, Link } from 'react-router-dom';
+import globalURL from '../../../globalURL';
 
 const StaffList = () => {
     const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const StaffList = () => {
         const fetchStaff = async () => {
             try {
                 console.log("fetching students")
-                const response = await fetch('http://localhost:5000/api/admin/staff', {
+                const response = await fetch(`http://${globalURL()}:5000/api/admin/staff`, {
                     method: 'GET'
                 });
                 if (!response.ok) {

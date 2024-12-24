@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import globalURL from '../../../globalURL';
 
 const StudentRequests = ({ stu_id }) => {
     const [requestType, setRequestType] = useState('');
@@ -18,7 +19,7 @@ const StudentRequests = ({ stu_id }) => {
 
             let req_type = requestType
 
-            const response = await fetch('http://localhost:5000/api/student/request', {
+            const response = await fetch(`http://${globalURL()}:5000/api/student/request`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

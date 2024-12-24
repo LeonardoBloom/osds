@@ -6,6 +6,7 @@ import StaffList from '../../../components/Lists/staff/StaffList';
 import StaffForm from '../addStaff/AddStaff';
 import StudentForm from '../addStudent/AddStudent';
 import { useNavigate } from 'react-router-dom';
+import globalURL from '../../../globalURL';
 
 const AdminHome = () => {
     const navigate = useNavigate()
