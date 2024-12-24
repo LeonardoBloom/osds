@@ -7,6 +7,7 @@ import Register from './components/register/Register.jsx';
 import AdminHome from './pages/admin/home/AdminHome.jsx';
 import StaffHome from './pages/staff/home/StaffHome.jsx';
 import StudentHome from './pages/student/home/StudentHome.jsx';
+import { BrowserRouter } from "react-router-dom";
 
 
 function App() {

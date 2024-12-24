@@ -18,7 +18,7 @@ const StudentHome = () => {
     const [view, setView] = useState(false)
     const [send, setSend] = useState(false)
 
-    const stu_id = location.state?.stu_id
+    const stu_id = location.state.stu_id
     
 
     function goToHome() {
