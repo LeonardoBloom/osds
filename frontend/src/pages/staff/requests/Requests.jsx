@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import globalURL from '../../../globalURL';
 
 const Requests = ({ requests }) => {
   // State to store the text input for each request
@@ -26,7 +27,7 @@ const Requests = ({ requests }) => {
     console.log("Submitting: ", formData);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/upload/doc/${req_id}`, {
+      const response = await fetch(`http://${globalURL()}:5000/api/upload/doc/${req_id}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

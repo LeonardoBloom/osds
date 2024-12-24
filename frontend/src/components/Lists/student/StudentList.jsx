@@ -4,6 +4,7 @@ import { FaUserGraduate } from "react-icons/fa";
 import ReactLoading from 'react-loading'
 import { Router, Link } from 'react-router-dom';
 import './StudentList.css'
+import globalURL from '../../../globalURL';
 
 const StudentList = ( {onStudentSelect }) => {
     const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const StudentList = ( {onStudentSelect }) => {
         const fetchStudents = async () => {
             try {
                 console.log("fetching students")
-                const response = await fetch('http://localhost:5000/api/staff/students', {
+                const response = await fetch(`http://${globalURL()}:5000/api/staff/students`, {
                     method: 'GET'
                 });
                 if (!response.ok) {

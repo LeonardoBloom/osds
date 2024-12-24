@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ViewRequests.css'; // You can import the CSS file for styling
+import globalURL from '../../../globalURL';
 
 const ViewRequests = ({ stu_id }) => {
     const [requests, setRequests] = useState([]);
@@ -12,7 +13,7 @@ const ViewRequests = ({ stu_id }) => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/staff/requests/${stu_id}`);
+                const response = await fetch(`http://${globalURL()}:5000/api/staff/requests/${stu_id}`);
                 const data = await response.json();
                 if (response.ok) {
                     setRequests(data);
@@ -28,7 +29,7 @@ const ViewRequests = ({ stu_id }) => {
 
         const fetchPubKey = async () => {
             
-                const response = await fetch('http://localhost:5000/api/keys/rsa/pubkey')
+                const response = await fetch(`http://${globalURL()}:5000/api/keys/rsa/pubkey`)
                 const data = await response.json()
 
                 setPubKey(data[0].key_pub)
@@ -45,7 +46,7 @@ const ViewRequests = ({ stu_id }) => {
         console.log("signature", signature)
         console.log("pubkey", pubKey)
         try {
-            const response = await fetch(`http://localhost:5000/api/upload/verify?data=${encodeURIComponent(data)}&signature=${encodeURIComponent(signature)}&pubKey=${encodeURIComponent(pubKey)}`, {
+            const response = await fetch(`http://${globalURL()}:5000/api/upload/verify?data=${encodeURIComponent(data)}&signature=${encodeURIComponent(signature)}&pubKey=${encodeURIComponent(pubKey)}`, {
                 method: 'GET',
             });
     
@@ -90,7 +91,7 @@ const ViewRequests = ({ stu_id }) => {
 
     const handleUploadReceipt = async (requestId) => {
         console.log(`Upload receipt for request ID: ${requestId}`);
-        const response = await fetch(`http://localhost:5000/api/upload/receipt/${requestId}`)
+        const response = await fetch(`http://${globalURL()}:5000/api/upload/receipt/${requestId}`)
         .then((response) => response.ok ? console.log("receipt uploaded"): console.log("failed receipt upload") )
 
 

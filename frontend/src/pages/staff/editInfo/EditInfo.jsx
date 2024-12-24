@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import globalURL from '../../../globalURL';
 
 const EditInfo = ({id}) => {
   const [userData, setUserData] = useState({
@@ -15,7 +16,7 @@ const EditInfo = ({id}) => {
   // Fetch the data from the API when the component mounts
   useEffect(() => {
     // Replace with your actual API endpoint
-    fetch(`http://localhost:5000/api/admin/staff/${id}`) 
+    fetch(`http://${globalURL()}:5000/api/admin/staff/${id}`) 
       .then(response => response.json())
       .then(data => {
         setUserData(data[0]); // Set the retrieved data into state

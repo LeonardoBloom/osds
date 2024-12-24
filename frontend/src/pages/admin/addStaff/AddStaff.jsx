@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AddStaff.css'
+import globalURL from '../../../globalURL';
 
 function StaffForm() {
   // Set initial state for form fields
@@ -40,7 +41,7 @@ function StaffForm() {
     console.log('Form Data Submitted:', JSON.stringify(formData));
 
     try {
-        const response = await fetch(`http://localhost:5000/api/admin/staff/add`, {
+        const response = await fetch(`http://${globalURL()}:5000/api/admin/staff/add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

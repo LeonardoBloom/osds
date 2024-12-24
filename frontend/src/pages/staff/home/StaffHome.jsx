@@ -9,6 +9,7 @@ import EditGrades from '../editGrades/EditGrades';
 import { useLocation, useNavigate } from 'react-router-dom';
 // import StaffForm from '../addStaff/AddStaff';
 // import StudentForm from '../addStudent/AddStudent';
+import globalURL from '../../../globalURL';
 
 const StaffHome = () => {
     const navigate = useNavigate()
@@ -78,7 +79,7 @@ const StaffHome = () => {
 
     const getRequests = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/staff/requests')
+            const response = await fetch(`http://${globalURL()}:5000/api/staff/requests`)
             if (!response.ok) {
                 console.error("error getting requests ")
             }
