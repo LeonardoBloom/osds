@@ -97,6 +97,27 @@ const StaffHome = () => {
         goToEditStudent()
     }
 
+    async function handleKeys(mode) {
+
+        console.log("updating: ", mode)
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/keys/update/${mode}`,  {
+                method: 'POST'
+            })
+
+            const data = await response.json()
+
+            console.log(data.message)
+        } catch (error) {
+            console.error("error")
+        }
+
+
+    }
+
+
+
     
     
 
@@ -116,6 +137,16 @@ const StaffHome = () => {
                 </div>
                 <div className='staff-list'>
                     <StaffList />
+                </div>
+                <div 
+                    style={{ 
+                        display: "flex",
+                        flexDirection:"column" }} 
+                    className='keys-update'
+                    >
+                <button onClick={() => handleKeys("des")} style={{height: "100px"}}>Update DES Keys</button>
+                <button onClick={() => handleKeys("rsa")} style={{height: "100px"}}>Update RSA Keys</button>
+
                 </div>
             </div>
 

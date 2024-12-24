@@ -1,5 +1,6 @@
 const db = require('./db/db');
 const CryptoJS = require('crypto-js');
+const rsa = require('./rsa')
 
 
 async function encryption_db_handler() {
@@ -90,6 +91,43 @@ async function encryption_db_handler() {
     }
 }
 
+async function rsa_update() {
+    try {
+        const {prev_pub, new_pub, prev_priv, new_priv} = await getLatestRSA();
+
+        if(!prev_pub || !new_pub || !prev_priv || !new_priv) {
+            console.error("No encryption rsa key found in db")
+            return
+        }
+
+        console.log("old rsa public: ", prev_pub)
+        console.log("old rsa private: ", prev_priv)
+        console.log("new rsa public: ", new_pub)
+        console.log("new rsa private: ", new_priv)
+
+        const requests = await getRequests();
+        if(requests.length === 0) {
+            console.log("No requests to process")
+            return;
+        }
+
+        for(const request of requests) {
+
+            console.log("RSA RE-signing", request, "with new: ", new_priv)
+
+            if(request.document) {
+                const fileSignature = await rsa.generateSignature("s", request.document)
+
+                sql = `UPDATE requests SET doc_rsa = ? WHERE req_id = ?`
+
+                db.query(sql, [fileSignature, request.req_id])
+                console.log("success updating:", request.req_id)
+            }
+        }
+    } catch (error) {
+        console.error("error")
+    }
+}
 // get latest encryption key
 function getLatestKey() {
     return new Promise((resolve, reject) => {
@@ -129,6 +167,25 @@ async function getDES_key() {
     })
 }
 
+function getLatestRSA() {
+    return new Promise((resolve, reject) => {
+        db.query(
+            'SELECT key_pub, key_priv FROM rsa_keys ORDER BY key_date DESC LIMIT 2',
+            (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    if( results.length < 2) {
+                        resolve({prev_pub: null, new_pub: null, prev_priv: null, new_priv: null});
+                    } else {
+                        resolve({prev_pub: results[1].key_pub, new_pub: results[0].key_pub, prev_priv: results[1].key_priv, new_priv: results[0].key_priv});
+                    }
+                }
+            }
+        );
+    });
+}
+
 function encrypt(data, key) {
     return CryptoJS.DES.encrypt(data, key).toString();
 }
@@ -148,6 +205,19 @@ function getStudents() {
         })
     })
 }
+
+function getRequests() {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM requests', (err, results) => {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(results)
+            }
+        })
+    })
+}
+
 function getStaff() {
     return new Promise((resolve, reject) => {
         db.query('SELECT * FROM staff', (err, results) => {
@@ -210,4 +280,4 @@ function updateStaff(sf_id, data) {
     })
 }
 
-module.exports = {encryption_db_handler, getDES_key };
+module.exports = {encryption_db_handler, getDES_key, rsa_update };
