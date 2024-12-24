@@ -1,19 +1,19 @@
-import React, { useState, useRef, useEffect, useContext} from 'react'
+import React, { useState, useContext } from 'react';
 import AuthContext from '../../context/AuthProvider';
 import axios from '../../api/axios';
-import { Form, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 import './Login.css';
-import Des_scr from '../../scripts/des';
 import { MdOutlineEnhancedEncryption } from "react-icons/md";
-import { useSignIn } from 'react-auth-kit'
 
-const LOGIN_URL = '/auth/login'
+const LOGIN_URL = '/auth/login';
+
 const Login = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const { setAuth } = useContext(AuthContext);
+
   const [selectedRole, setSelectedRole] = useState("");
-  const [FormData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     des_key: "",
     email: "",
     pwd: "",
@@ -28,7 +28,6 @@ const Login = () => {
     }));
   };
 
-  // Function to handle radio button selection
   const handleRoleChange = (event) => {
     const role = event.target.value;
     setSelectedRole(role);
@@ -36,19 +35,12 @@ const Login = () => {
       ...prevData,
       role: role,
     }));
-    performAction(role);
-  };
-
-  // Perform some action based on the selected role
-  const performAction = (role) => {
-    console.log(`Selected role is: ${role}`);
-    // Add additional actions if needed
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!FormData.des_key || !FormData.email || !FormData.pwd || !FormData.role) {
+    if (!formData.des_key || !formData.email || !formData.pwd || !formData.role) {
       alert("Please fill in all fields, including the role.");
       return;
     }
@@ -56,25 +48,27 @@ const Login = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify(FormData),
+        JSON.stringify(formData),
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("Response data:", JSON.stringify(response?.data));
-      // alert("Login successful!");
-      if (FormData.role == "sysadmin") {
-        navigate("/admin", {state: {id: FormData.email}})
-      } else if (FormData.role == "staff") {
-        navigate("/staff", {state: {sf_id: FormData.email} })
-      } else if (FormData.role == "student") {
-        navigate("/student", {state: {stu_id: FormData.email}})
+
+      console.log("Response data:", response?.data);
+
+      // Navigate based on the selected role
+      if (formData.role === "sysadmin") {
+        navigate("/admin", { state: { id: formData.email } });
+      } else if (formData.role === "staff") {
+        navigate("/staff", { state: { sf_id: formData.email } });
+      } else if (formData.role === "student") {
+        navigate("/student", { state: { stu_id: formData.email } });
+      } else {
+        alert("Invalid role.");
       }
-
-
     } catch (err) {
-      // console.error("Login failed:", err);
-      alert("Login failed.");
+      console.error("Login failed:", err);
+      alert(`Login failed: ${err.message}`);
     }
   };
 
@@ -128,7 +122,7 @@ const Login = () => {
             className="grow"
             placeholder="DES Key"
             name="des_key"
-            value={FormData.des_key}
+            value={formData.des_key}
             onChange={handleChange}
           />
         </label>
@@ -139,7 +133,7 @@ const Login = () => {
             className="grow"
             placeholder="Email"
             name="email"
-            value={FormData.email}
+            value={formData.email}
             onChange={handleChange}
           />
         </label>
@@ -150,7 +144,7 @@ const Login = () => {
             className="grow"
             placeholder="Password"
             name="pwd"
-            value={FormData.pwd}
+            value={formData.pwd}
             onChange={handleChange}
           />
         </label>

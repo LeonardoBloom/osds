@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const StudentHome = () => {
     const navigate = useNavigate()
+    const location = useLocation()
 
     const [isVisible, setIsVisible] = useState(true)
     const [makeRequest, setMakeRequest] = useState(false)
