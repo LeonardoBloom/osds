@@ -18,6 +18,7 @@ const StaffHome = () => {
     const [addStudent, setAddStudent] = useState(false)
     const [requests, setRequests] = useState(false)
     const [requestData, setRequestData] = useState(false)
+    const [desKey, setDesKey] = useState('')
     const location = useLocation();
     const [stu_id, setStu_id] = useState(null)
 
@@ -27,7 +28,24 @@ const StaffHome = () => {
 
     useEffect (() => {
         getRequests()
+
+        getDES()
+        
     }, [])
+
+    const getDES = async () => {
+        try {
+            const res = await fetch(`http://${globalURL()}:5000/api/keys/getDes`)
+
+            const result = await res.json()
+            console.log("result", result.key)
+            setDesKey(result.key)
+
+        } catch (error) {
+            alert("no des")
+        }
+    }
+
     
 
     function goToHome() {
@@ -103,16 +121,22 @@ const StaffHome = () => {
         console.log("updating: ", mode)
 
         try {
-            const response = await fetch(`http://localhost:5000/api/keys/update/${mode}`,  {
+            const response = await fetch(`http://${globalURL()}:5000/api/keys/update/${mode}`,  {
                 method: 'POST'
             })
 
             const data = await response.json()
 
             console.log(data.message)
+
+            
+
+            
         } catch (error) {
             console.error("error")
         }
+
+        
 
 
     }
@@ -147,6 +171,12 @@ const StaffHome = () => {
                     >
                 <button onClick={() => handleKeys("des")} style={{height: "100px"}}>Update DES Keys</button>
                 <button onClick={() => handleKeys("rsa")} style={{height: "100px"}}>Update RSA Keys</button>
+                <br></br>
+                <br></br>
+                <p>DES KEY GENERATED: <br></br><span style={{color: "red", fontSize: "20px"}}>{desKey}</span> 
+                <br></br>
+                ( DO NOT SHARE !!!)
+                </p>
 
                 </div>
             </div>

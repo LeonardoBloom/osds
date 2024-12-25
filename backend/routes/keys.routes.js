@@ -20,6 +20,17 @@ router.get('/rsa/getkeys', (req, res) => {
     console.log("made GET RSA Keys request")
 })
 
+router.get('/getDes', async (req, res) => {
+
+    console.log("made get des")
+
+    const des = await key_handler.getDES_key()
+
+    console.log(des)
+
+    res.send(des)
+})
+
 router.get('/rsa/pubkey', (req, res) => {
     sql = `select key_pub from rsa_keys`
 
